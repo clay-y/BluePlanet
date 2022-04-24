@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .earth_main {
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('./images/00011.jpeg');
+            /* 00009和00010比较好看*/
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+       .clock_dial {
+            transform: rotate(-60deg);
+        }
+
+        .time {
+            width: 465px;
+            height: 465px;
+            border-radius: 465px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 3000;
+            background: rgba(57, 57, 57, 1);
+            border: 2px solid rgba(120, 120, 120, 1);
+            transition: all 30s;
+            position: relative;
+        }
+
+         .time_within {
+            width: 397px;
+            height: 397px;
+            border-radius: 397px;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -198.5px;
+            margin-left: -198.5px;
+        }
+
+        .time>ul {
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .time>ul>li {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -.5px;
+            list-style: none;
+            width: 50%;
+            height: 2px;
+            display: flex;
+            flex-flow: row;
+            justify-content: flex-end;
+            align-content: center;
+            transform-origin: left;
+        }
+
+        .time>ul>li>span {
+            width: 6px;
+            height: 2px;
+            background: #fff;
+            color: #fff;
+            font-size: 12px;
+            position: relative;
+        }
+
+        .time>ul>li>span>i {
+            position: absolute;
+            right: 12px;
+            top: -6px;
+            transform: rotate(90deg);
+            font-style: normal;
+        }
+
+        .branch {
+            width: 394px;
+            height: 394px;
+            border-radius: 394px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 3000;
+            background-image: radial-gradient(rgba(0, 0, 0, 1), rgba(139, 139, 139, 250));
+            transition: 1s linear;
+        }
+
+        .branch>ul {
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+
+        }
+
+        .branch>ul>li {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            list-style: none;
+            width: 50%;
+            height: 2px;
+            display: flex;
+            flex-flow: row;
+            justify-content: flex-end;
+            align-content: center;
+            transform-origin: left;
+        }
+
+        .branch>ul>li>span {
+            width: 12px;
+            height: 2px;
+            background: #fff;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .earth {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -162px;
+            margin-left: -162px;
+            width: 324px;
+            height: 324px;
+            border-radius: 324px;
+            box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 1);
+            z-index: 5000;
+            transition: 1s linear;
+        }
+
+        .earth img {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            z-index: 2000;
+            background: transparent;
+        } 
+    </style>
+</head>
+
+<body>
+    <div class="earth_main">
+        <div class="clock_dial">
+        <!-- 最外圈的表盘-表示的是时针部分 -->
+            <div class="time">
+                <div class="time_within">
+                    <!-- 里圈的表盘-表示的是分针部分 -->
+                    <div class="branch"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 最中间的地球-表示指针的部分 -->
+        <div class="earth">
+            <img src="./images/earth.png" alt="">
+        </div>
+    </div>
+    <script>
+        const branch = document.querySelector('.branch')
+
+        const earth = document.querySelector('.earth')
+
+        const time = document.querySelector('.time')
+
+
+        window.onload = () => {
+            branchFun()
+            timeFun()
+            tick()
+        }
+        function branchFun() {
+            // 创建一个ul标签
+            const Ul = document.createElement('ul');
+            // 写一个循环，创建60个刻度
+            for (let i = 0; i < 60; i++) {
+                // 创建li标签当刻度
+                const Li = document.createElement('li');
+                // li标签里写一个span标签，背景色为白色
+                Li.innerHTML = `<span style="margin-right:10px"></span>`
+                // 每隔五个刻度要显示数字
+                if (i % 5 === 0) {
+                    // 当为第五个刻度的时候span标签背景色为透明色，然后旋转90度。
+                    // 数字为小于10的时候要现实05或者00，所以做了一个判断
+                    // 因为数字是逆时针显示，所以用55-i，请看效果图
+                    Li.innerHTML = `<span style="margin-right:3px;background: transparent;transform: rotate(90deg);">${(55 - i) < 10 ? ('0' + (55 - i)) : (55 - i)}</span>`
+                }
+                // 每个li标签以左端为中点旋转6度
+                Li.style.cssText = "transform:rotate(" + (i * 6) + "deg)";
+                // 将li标签插入ul标签
+                Ul.appendChild(Li);
+            }
+             // 将ul标签插入div标签
+            branch.appendChild(Ul);
+        }
+
+        function timeFun() {
+            // 创建一个ul标签
+            const Ul = document.createElement('ul');
+             // 写一个循环，创建60个刻度
+            for (let i = 0; i < 144; i++) {
+                // 创建li标签当刻度
+                const Li = document.createElement('li');
+                // li标签里写一个span标签，背景色为白色
+                Li.innerHTML = `<span style="margin-right:5px"></span>`
+                // 每隔3个刻度要显示显示加重的刻度
+                if (i % 3 === 0) {
+                    // 增加了span的宽度
+                    Li.innerHTML = `<span style="width: 12px;margin-right:5px"></span>`
+                }
+                // 表盘一共显示12个小时
+                if (i % 12 === 0) {
+                    Li.innerHTML = `<span style="height:3px;width: 8px;margin-right:5px"><i>${i / 12 + 1}</i></span>`
+                }
+                // 每个刻度之间时2.5度
+                Li.style.cssText = "transform:rotate(" + (i * 2.5) + "deg)";
+                // 将li标签插入ul标签
+                Ul.appendChild(Li);
+            }
+            // 将ul标签插入div标签
+            time.appendChild(Ul);
+        }
+
+        let timerVal;
+        function tick() {
+            const TIME = new Date();
+            const hour = TIME.getHours();
+            const minute = TIME.getMinutes();
+            const second = TIME.getSeconds();
+            // 时针转动：转动角度是小时*30度+分钟*0.5度-52.5度。
+            // 52.5度是地球上的指针默认指向的角度，所以每次转动我需要减去这部分
+            earth.style.cssText = "transform:rotate(" + (775 - (775 - (hour * 30 + minute * 0.5) - 52.5)) + "deg)";
+            // 分针转动：转动角度是分钟*6度+小时*30度+分钟*0.5度
+            // 2度是我实在是不知道怎么产生的。我只能手动减去2度
+            // console.log('分针转动:',((minute*6)+(hour * 30 + minute * 0.5))-2);
+            branch.style.cssText = "transform:rotate(" + (((minute * 6) + (hour * 30 + minute * 0.5)) - 2) + "deg)";
+        }
+        timerVal = setInterval(tick, 1000);
+
+    </script>
+</body>
+
+</html>
